@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirch Masala - Indian Cloud Kitchen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: url('https://t4.ftcdn.net/jpg/01/02/58/91/360_F_102589163_hk02O92vzEYP0rZbVyvDTbkje1GaUDk1.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            background-blend-mode: lighten;
+        }
+        .mirch-masala {
+            color: #e53e3e;
+            font-weight: 700;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .category-btn.active {
+            background-color: #e53e3e;
+            color: white;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e53e3e;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .page-transition {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .menu-item-image {
+            height: 180px;
+            object-fit: cover;
+        }
+        @media (max-width: 640px) {
+            .menu-item-image {
+                height: 120px;
+            }
+        }
+        .content-container {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 0.5rem;
+        }
+        .order-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-delivered {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .status-pending {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .tab-btn.active {
+            border-bottom: 2px solid #e53e3e;
+            color: #e53e3e;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <nav class="bg-white shadow-md fixed w-full z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" onclick="loadPage('home')" class="text-2xl font-bold mirch-masala cursor-pointer">Mirch Masala</a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" onclick="loadPage('home')" class="hover:text-red-500">Home</a>
+                <a href="#" onclick="loadPage('menu')" class="hover:text-red-500">Menu</a>
+                <a href="#" onclick="loadPage('cart')" class="hover:text-red-500 relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-badge" class="cart-badge hidden">0</span>
+                </a>
+                <a href="#" onclick="loadPage('profile')" class="hover:text-red-500">Profile</a>
+                <a href="#" onclick="loadPage('login')" class="hover:text-red-500">Login</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-2 px-4 shadow-lg">
+            <a href="#" onclick="loadPage('home')" class="block py-2 hover:text-red-500">Home</a>
+            <a href="#" onclick="loadPage('menu')" class="block py-2 hover:text-red-500">Menu</a>
+            <a href="#" onclick="loadPage('cart')" class="block py-2 hover:text-red-500 relative">
+                <i class="fas fa-shopping-cart mr-2"></i>Cart
+                <span id="mobile-cart-badge" class="cart-badge hidden">0</span>
+            </a>
+            <a href="#" onclick="loadPage('profile')" class="block py-2 hover:text-red-500">Profile</a>
+            <a href="#" onclick="loadPage('login')" class="block py-2 hover:text-red-500">Login</a>
+        </div>
+    </nav>
+
+    <main class="pt-20 pb-10 container mx-auto px-4 page-transition" id="main-content">
+        <section id="home-page">
+            <div class="hero bg-red-50 rounded-lg p-8 mb-8 content-container">
+                <h1 class="text-4xl font-bold mb-4">Welcome to <span class="mirch-masala">Mirch Masala</span></h1>
+                <p class="text-lg mb-6">Authentic Indian flavours delivered straight to your doorstep!</p>
+                <button onclick="loadPage('menu')" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    Explore Our Menu
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md content-container">
+                    <div class="text-red-500 text-3xl mb-4">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Authentic Taste</h3>
+                    <p class="text-gray-600">Traditional recipes prepared by expert chefs.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md content-container">
+                    <div class="text-red-500 text-3xl mb-4">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Fresh Ingredients</h3>
+                    <p class="text-gray-600">We use only the freshest ingredients for every dish.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md content-container">
+                    <div class="text-red-500 text-3xl mb-4">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Quick Delivery</h3>
+                    <p class="text-gray-600">Get your favorite dishes delivered in under 30 minutes.</p>
+                </div>
+            </div>
+
+            <div class="mb-8 content-container p-6">
+                <h2 class="text-2xl font-bold mb-4">Popular Dishes</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden food-card">
+                        <img src="{{ url_for('static', filename='images/menu/gobi_manchurian.jpg') }}" alt="Gobi Manchurian" class="w-full h-32 object-cover">
+<div class="p-3">
+                            <h3 class="font-semibold">Gobi Manchurian</h3>
+                            <p class="text-red-600 font-bold">₹150</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden food-card">
+                        <img src="{{ url_for('static', filename='images/menu/paneer_butter_masala.jpg') }}" alt="Paneer Butter Masala" class="w-full h-32 object-cover">
+<div class="p-3">
+                            <h3 class="font-semibold">Paneer Butter Masala</h3>
+                            <p class="text-red-600 font-bold">₹220</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden food-card">
+                        <img src="{{ url_for('static', filename='images/menu/butter_garlic_naan.jpg') }}" alt="Butter Garlic Naan" class="w-full h-32 object-cover">
+<div class="p-3">
+                            <h3 class="font-semibold">Butter Garlic Naan</h3>
+                            <p class="text-red-600 font-bold">₹70</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden food-card">
+                        <img src="{{ url_for('static', filename='images/menu/gulab_jamun.jpg') }}" alt="Gulab Jamun" class="w-full h-32 object-cover">
+<div class="p-3">
+                            <h3 class="font-semibold">Gulab Jamun</h3>
+                            <p class="text-red-600 font-bold">₹90</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="login-page" class="hidden max-w-md mx-auto content-container">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-6 text-center">Login to <span class="mirch-masala">Mirch Masala</span></h2>
+                <form id="login-form">
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="login-email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="login-password" class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="login-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="user-type" class="block text-gray-700 mb-2">User Type</label>
+                        <select id="user-type" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="customer">Customer</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 mb-4">
+                        Login
+                    </button>
+                    <p class="text-center text-gray-600">
+                        Don't have an account? <a href="#" onclick="loadPage('signup')" class="text-red-600 hover:underline">Sign up</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <section id="signup-page" class="hidden max-w-md mx-auto content-container">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-6 text-center">Create an Account</h2>
+                <form id="signup-form">
+                    <div class="mb-4">
+                        <label for="signup-name" class="block text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="signup-name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="signup-email" class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="signup-email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="signup-phone" class="block text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" id="signup-phone" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="signup-password" class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="signup-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="signup-address" class="block text-gray-700 mb-2">Delivery Address</label>
+                        <textarea id="signup-address" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="signup-user-type" class="block text-gray-700 mb-2">User Type</label>
+                        <select id="signup-user-type" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="customer">Customer</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                        Create Account
+                    </button>
+                    <p class="text-center text-gray-600 mt-4">
+                        Already have an account? <a href="#" onclick="loadPage('login')" class="text-red-600 hover:underline">Login</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <section id="menu-page" class="hidden content-container p-6">
+            <h1 class="text-3xl font-bold mb-6 text-center">Our <span class="mirch-masala">Menu</span></h1>
+            
+            <div class="flex overflow-x-auto pb-2 mb-6 space-x-2">
+                <button onclick="filterMenu('all')" class="category-btn active px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">All Items</button>
+                <button onclick="filterMenu('Soups')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Soups</button>
+                <button onclick="filterMenu('Starters')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Starters</button>
+                <button onclick="filterMenu('Lentils')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Lentils & Rice</button>
+                <button onclick="filterMenu('Main Course')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Main Course</button>
+                <button onclick="filterMenu('Paneer')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Paneer Specials</button>
+                <button onclick="filterMenu('Breads')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Indian Breads</button>
+                <button onclick="filterMenu('Beverages')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Beverages</button>
+                <button onclick="filterMenu('Desserts')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Desserts</button>
+                <button onclick="filterMenu('Ice Creams')" class="category-btn px-4 py-2 bg-gray-200 rounded-full whitespace-nowrap">Ice Creams</button>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="menu-items-container">
+                </div>
+              
+        </section>
+
+        <section id="cart-page" class="hidden max-w-4xl mx-auto content-container p-6">
+            <h1 class="text-3xl font-bold mb-6 text-center">Your <span class="mirch-masala">Cart</span></h1>
+            
+            <div id="cart-items-container" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div id="empty-cart-message" class="text-center py-10">
+                    <i class="fas fa-shopping-cart text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-xl text-gray-500">Your cart is empty</p>
+                    <button onclick="loadPage('menu')" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                        Browse Menu
+                    </button>
+                </div>
+            </div>
+            
+            <div id="cart-summary" class="bg-white rounded-lg shadow-md p-6 hidden">
+                <div class="flex justify-between mb-4">
+                    <span class="font-semibold">Subtotal:</span>
+                    <span id="cart-subtotal" class="font-bold">₹0</span>
+                </div>
+                <div class="flex justify-between mb-4">
+                    <span class="font-semibold">Delivery Fee:</span>
+                    <span id="delivery-fee" class="font-bold">₹30</span>
+                </div>
+                <div class="flex justify-between mb-6 border-t pt-4">
+                    <span class="font-semibold text-lg">Total:</span>
+                    <span id="cart-total" class="font-bold text-lg">₹0</span>
+                </div>
+                <button onclick="loadPage('checkout')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </section>
+
+        <section id="checkout-page" class="hidden max-w-2xl mx-auto content-container p-6">
+            <h1 class="text-3xl font-bold mb-6 text-center">Checkout</h1>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-bold mb-4">Delivery Address</h2>
+                <div class="mb-6">
+                    <div class="flex items-center mb-2">
+                        <input type="radio" id="saved-address" name="address" checked class="mr-2">
+                        <label for="saved-address" id="saved-address-text">1644 Aundh, Pune</label>
+                    </div>
+                    <button class="text-red-600 hover:underline">Add new address</button>
+                </div>
+                
+                <h2 class="text-xl font-bold mb-4">Payment Method</h2>
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center p-3 border rounded-lg">
+                        <input type="radio" id="cod" name="payment" checked class="mr-3">
+                        <label for="cod" class="flex-1">Cash on Delivery</label>
+                        <i class="fas fa-money-bill-wave text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center p-3 border rounded-lg">
+                        <input type="radio" id="online" name="payment" class="mr-3">
+                        <label for="online" class="flex-1">Online Payment</label>
+                        <i class="fab fa-cc-visa text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center p-3 border rounded-lg">
+                        <input type="radio" id="upi" name="payment" class="mr-3">
+                        <label for="upi" class="flex-1">UPI Payment</label>
+                        <i class="fas fa-mobile-alt text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-4">
+                    <div class="flex justify-between mb-2">
+                        <span>Subtotal:</span>
+                        <span id="checkout-subtotal">₹0</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>Delivery Fee:</span>
+                        <span>₹30</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg mt-3">
+                        <span>Total:</span>
+                        <span id="checkout-total">₹0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="placeOrder()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                Place Order
+            </button>
+        </section>
+
+        <section id="order-confirmation-page" class="hidden max-w-2xl mx-auto content-container p-6">
+            <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                <div class="text-green-500 text-6xl mb-4">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="text-3xl font-bold mb-2">Order Confirmed!</h1>
+                <p class="text-lg mb-6">Thank you for ordering from <span class="mirch-masala">Mirch Masala</span></p>
+                
+                <div class="bg-gray-50 rounded-lg p-6 mb-6 text-left">
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Order ID:</span>
+                        <span id="order-id" class="font-semibold">#MS123456</span>
+                    </div>
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Estimated Delivery:</span>
+                        <span id="delivery-time" class="font-semibold">30-45 minutes</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Payment Method:</span>
+                        <span id="payment-method" class="font-semibold">Cash on Delivery</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-3">Order Summary</h2>
+                    <div id="order-summary-items" class="mb-3">
+                        </div>
+                    <div class="flex justify-between font-bold text-lg border-t pt-3">
+                        <span>Total:</span>
+                        <span id="order-total">₹0</span>
+                    </div>
+                </div>
+                
+                <button onclick="loadPage('home')" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                    Back to Home
+                </button>
+            </div>
+        </section>
+
+        <section id="profile-page" class="hidden max-w-4xl mx-auto content-container p-6">
+            <h1 class="text-3xl font-bold mb-6 text-center">Your <span class="mirch-masala">Profile</span></h1>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex flex-col md:flex-row items-start md:items-center mb-6">
+                    <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4 md:mb-0 md:mr-6">
+                        <i class="fas fa-user text-4xl text-red-500"></i>
+                    </div>
+                    <div>
+                        <h2 id="profile-name" class="text-2xl font-bold">John Doe</h2>
+                        <p id="profile-email" class="text-gray-600 mb-1">john.doe@example.com</p>
+                        <span id="profile-type" class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm">
+                            Customer
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-4">
+                    <h3 class="text-lg font-semibold mb-3">Account Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-gray-600 text-sm mb-1">Phone Number</label>
+                            <p id="profile-phone" class="font-medium">+91 9876543210</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-600 text-sm mb-1">Address</label>
+                            <p id="profile-address" class="font-medium">1644 Aundh, Pune, Maharashtra</p>
+                        </div>
+                    </div>
+                    <button onclick="loadPage('signup')" class="text-red-600 hover:text-red-800 font-medium">
+                        <i class="fas fa-edit mr-1"></i> Edit Profile
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex border-b mb-4">
+                    <button id="orders-tab" class="tab-btn active pb-2 mr-6" onclick="switchProfileTab('orders')">
+                        Order History
+                    </button>
+                    <button id="favorites-tab" class="tab-btn pb-2" onclick="switchProfileTab('favorites')">
+                        Favorites
+                    </button>
+                </div>
+                
+                <div id="orders-content">
+                    <div id="order-history-container">
+                        </div>
+                </div>
+                
+                <div id="favorites-content" class="hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="food-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                            <img src="https://www.cookwithmanali.com/wp-content/uploads/2020/01/Paneer-Butter-Masala.jpg" alt="Paneer Butter Masala" class="w-full h-32 object-cover">
+                            <div class="p-3">
+                                <h3 class="font-semibold">Paneer Butter Masala</h3>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-red-600 font-bold">₹220</span>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="food-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                            <img src="https://www.whiskaffair.com/p/wp-content/uploads/2020/04/Butter-Garlic-Naan-2-3.jpg" alt="Butter Garlic Naan" class="w-full h-32 object-cover">
+                            <div class="p-3">
+                                <h3 class="font-semibold">Butter Garlic Naan</h3>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-red-600 font-bold">₹70</span>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="food-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                            <img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2021/08/gulab-jamun-recipe.jpg" alt="Gulab Jamun" class="w-full h-32 object-cover">
+                            <div class="p-3">
+                                <h3 class="font-semibold">Gulab Jamun</h3>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-red-600 font-bold">₹90</span>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-page" class="hidden max-w-4xl mx-auto content-container p-6">
+            <h1 class="text-3xl font-bold mb-6 text-center"><span class="mirch-masala">Admin</span> Dashboard</h1>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-bold mb-4">Add New Menu Item</h2>
+                <form id="add-item-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="item-name" class="block text-gray-700 mb-2">Item Name</label>
+                        <input type="text" id="item-name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div>
+                        <label for="item-category" class="block text-gray-700 mb-2">Category</label>
+                        <select id="item-category" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                            <option value="">Select Category</option>
+                            <option value="Soups">Soups</option>
+                            <option value="Starters & Indo-Chinese Specials">Starters</option>
+                            <option value="Lentils & Rice">Lentils & Rice</option>
+                            <option value="Main Course - Vegetarian Delights">Main Course</option>
+                            <option value="Main Course - Paneer Specialties">Paneer Specialties</option>
+                            <option value="Indian Breads">Indian Breads</option>
+                            <option value="Beverages - Traditional Indian Drinks">Beverages</option>
+                            <option value="Desserts & Sweets">Desserts</option>
+                            <option value="Ice Creams">Ice Creams</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="item-price" class="block text-gray-700 mb-2">Price (₹)</label>
+                        <input type="number" id="item-price" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    </div>
+                    <div>
+                        <label for="item-image" class="block text-gray-700 mb-2">Image URL</label>
+                        <input type="text" id="item-image" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="item-description" class="block text-gray-700 mb-2">Description</label>
+                        <textarea id="item-description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" required></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                            Add Item
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-bold mb-4">Manage Menu Items</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2 px-4">Item</th>
+                                <th class="text-left py-2 px-4">Price</th>
+                                <th class="text-left py-2 px-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-menu-items">
+                            </tbody>
+                    </table>
+                    <div id="edit-item-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-20">
+                        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+                            <div class="mt-3">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Edit Menu Item</h3>
+                                <form id="edit-item-form">
+                                    <input type="hidden" id="edit-item-id">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="edit-item-name" class="block text-gray-700 mb-2">Item Name</label>
+                                            <input type="text" id="edit-item-name" class="w-full px-4 py-2 border rounded-lg" required>
+                                        </div>
+                                        <div>
+                                            <label for="edit-item-category" class="block text-gray-700 mb-2">Category</label>
+                                            <select id="edit-item-category" class="w-full px-4 py-2 border rounded-lg" required>
+                                                <option value="">Select Category</option>
+                                                <option value="Soups">Soups</option>
+                                                <option value="Starters & Indo-Chinese Specials">Starters</option>
+                                                <option value="Lentils & Rice">Lentils & Rice</option>
+                                                <option value="Main Course - Vegetarian Delights">Main Course</option>
+                                                <option value="Main Course - Paneer Specialties">Paneer Specialties</option>
+                                                <option value="Indian Breads">Indian Breads</option>
+                                                <option value="Beverages - Traditional Indian Drinks">Beverages</option>
+                                                <option value="Desserts & Sweets">Desserts</option>
+                                                <option value="Ice Creams">Ice Creams</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="edit-item-price" class="block text-gray-700 mb-2">Price (₹)</label>
+                                            <input type="number" id="edit-item-price" class="w-full px-4 py-2 border rounded-lg" required>
+                                        </div>
+                                        <div>
+                                            <label for="edit-item-image" class="block text-gray-700 mb-2">Image Filename (e.g., gobi_manchurian.jpg)</label>
+                                            <input type="text" id="edit-item-image" class="w-full px-4 py-2 border rounded-lg">
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label for="edit-item-description" class="block text-gray-700 mb-2">Description</label>
+                                            <textarea id="edit-item-description" rows="3" class="w-full px-4 py-2 border rounded-lg" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="items-center px-4 py-3 mt-4 text-right">
+                                        <button id="cancel-edit-btn" type="button" class="px-4 py-2 bg-gray-500 text-white rounded-md mr-2">Cancel</button>
+                                        <button id="save-edit-btn" type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 mirch-masala">Mirch Masala</h3>
+                    <p class="mb-4">Authentic Indian flavors delivered to your doorstep.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-red-400"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-red-400"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-red-400"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" onclick="loadPage('home')" class="hover:text-red-400">Home</a></li>
+                        <li><a href="#" onclick="loadPage('menu')" class="hover:text-red-400">Menu</a></li>
+                        <li><a href="#" onclick="loadPage('cart')" class="hover:text-red-400">Cart</a></li>
+                        <li><a href="#" onclick="loadPage('profile')" class="hover:text-red-400">Profile</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <p class="mb-2"><i class="fas fa-map-marker-alt mr-2"></i> 1644 Aundh, Pune</p>
+                    <p class="mb-2"><i class="fas fa-phone mr-2"></i> +91 8104164414</p>
+                    <p><i class="fas fa-envelope mr-2"></i> contact@mirchmasala.com</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center">
+                <p>&copy; 2023 Mirch Masala. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

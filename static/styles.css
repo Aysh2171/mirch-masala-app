@@ -1,0 +1,147 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #fefefe;
+    color: #222;
+    background-image: url('/static/spice-bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    backdrop-filter: brightness(0.95);
+}
+
+/* Navbar */
+
+nav {
+    background-color: #ffffff;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: relative;
+    z-index: 10;
+}
+
+
+
+nav a {
+    color: #e50914;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 60px 20px 30px 20px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #e50914;
+}
+
+header p {
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #e50914;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #c00710;
+}
+
+/* Sections */
+section {
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    margin: 20px auto;
+    max-width: 1000px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: #222;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Dishes */
+.dish-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.dish {
+    width: 220px;
+    margin: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.dish img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.dish:hover {
+    transform: translateY(-5px);
+}
+
+.dish h3 {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #e50914;
+}
+
+.price {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 5px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    background-color: #e50914;
+    color: white;
+    margin-top: 40px;
+}

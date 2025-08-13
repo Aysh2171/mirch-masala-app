@@ -1,0 +1,13 @@
+# Environment variables - VERY IMPORTANT!
+.env
+
+# Database backups
+*.sql
+
+# Python virtual environment folder
+venv/
+/venv/
+
+# Python cache files
+__pycache__/
+*.pyc
