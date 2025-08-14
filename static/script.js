@@ -1,5 +1,5 @@
 // Global variables
-const API_URL = '';
+const API_URL = 'http://13.127.182.153:5000';
 let cart = [];
 let currentUser = null;
 let currentPage = 'home';
@@ -34,86 +34,7 @@ const mainContent = document.getElementById('main-content');
 
 // Menu items data
 const menuItemsData = [
-    {
-        id: 1,
-        name: 'Fresh Tomato Soup',
-        description: 'A delicious and refreshing soup made from fresh tomatoes.',
-        category: 'Soups',
-        price: 80,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 2,
-        name: 'Manchow Soup',
-        description: 'A spicy and flavorful Indo-Chinese soup with vegetables and crispy noodles.',
-        category: 'Soups',
-        price: 90,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 5,
-        name: 'Gobi Manchurian',
-        description: 'Crispy cauliflower fritters coated in a spicy, tangy sauce.',
-        category: 'Starters & Indo-Chinese Specials',
-        price: 150,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 9,
-        name: 'Paneer 65',
-        description: 'Spicy, deep-fried paneer cubes coated in a flavorful batter.',
-        category: 'Starters & Indo-Chinese Specials',
-        price: 180,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 20,
-        name: 'Malai Kofta',
-        description: 'Deep-fried dumplings of paneer and vegetables in a rich, creamy gravy.',
-        category: 'Main Course - Vegetarian Delights',
-        price: 200,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 25,
-        name: 'Paneer Butter Masala',
-        description: 'Cottage cheese cooked in a rich, buttery tomato gravy.',
-        category: 'Main Course - Paneer Specialties',
-        price: 220,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 33,
-        name: 'Butter Garlic Naan',
-        description: 'Naan topped with butter and a fragrant garlic seasoning.',
-        category: 'Indian Breads',
-        price: 55,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 43,
-        name: 'Malai Lassi',
-        description: 'A creamy, sweet yogurt drink.',
-        category: 'Beverages - Traditional Indian Drinks',
-        price: 100,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 47,
-        name: 'Green Apple Mojito',
-        description: 'A refreshing mojito made with green apple and mint.',
-        category: 'Beverages - Refreshing Drinks',
-        price: 170,
-        image: 'https://placeholder.svg?height=180&width=280'
-    },
-    {
-        id: 54,
-        name: 'Sizzling Brownie',
-        description: 'A warm brownie served on a sizzling plate with ice cream.',
-        category: 'Desserts & Sweets',
-        price: 180,
-        image: 'https://placeholder.svg?height=180&width=280'
-    }
+    // ... (This data is not used but kept as per your file)
 ];
 
 // Cart data
@@ -130,24 +51,22 @@ const menuItemsData = [
 document.addEventListener('DOMContentLoaded', () => {
     // Set up event listeners
     mobileMenuButton.addEventListener('click', toggleMobileMenu);
-    
+
     // Form submissions
     document.getElementById('login-form')?.addEventListener('submit', handleLogin);
     document.getElementById('signup-form')?.addEventListener('submit', handleSignup);
     document.getElementById('add-item-form')?.addEventListener('submit', handleAddMenuItem);
-    
+
     // Check if user is logged in
     updateAuthUI();
-    
-    // --- FIX START: DEFAULT TO LOGIN PAGE ---
+
     // Load login page by default if not logged in, otherwise load home
     if (currentUser) {
         loadPage('home');
     } else {
         loadPage('login');
     }
-    // --- FIX END: DEFAULT TO LOGIN PAGE ---
-    
+
     // Update cart badge
     updateCartBadge();
 });
@@ -157,7 +76,6 @@ function toggleMobileMenu() {
     mobileMenu.classList.toggle('hidden');
 }
 
-// --- FIX START: ADMIN LINK BUG ---
 // This entire function is corrected to properly add/remove the Admin link.
 function updateAuthUI() {
     const loginLinks = document.querySelectorAll('a[onclick="loadPage(\'login\')"]');
@@ -166,7 +84,7 @@ function updateAuthUI() {
     const navMenu = document.querySelector('.hidden.md\\:flex.space-x-6'); 
     const mobileMenuContainer = document.getElementById('mobile-menu');
 
-    // First, clean up any existing admin links to prevent duplicates on re-render
+    // First, clean up any existing admin links to prevent duplicates
     const existingAdminLink = navMenu?.querySelector('a[onclick="loadPage(\'admin\')"]');
     if (existingAdminLink) existingAdminLink.remove();
     const existingMobileAdminLink = mobileMenuContainer?.querySelector('a[onclick="loadPage(\'admin\')"]');
@@ -189,9 +107,7 @@ function updateAuthUI() {
                 adminLink.textContent = 'Admin';
                 // Insert after Profile link for consistent order
                 const profileLink = navMenu.querySelector('a[onclick="loadPage(\'profile\')"]');
-                if (profileLink) {
-                    profileLink.insertAdjacentElement('afterend', adminLink);
-                }
+                profileLink.insertAdjacentElement('afterend', adminLink);
             }
             if (mobileMenuContainer) {
                 const mobileAdminLink = document.createElement('a');
@@ -200,9 +116,7 @@ function updateAuthUI() {
                 mobileAdminLink.className = 'block py-2 hover:text-red-500';
                 mobileAdminLink.textContent = 'Admin';
                 const mobileProfileLink = mobileMenuContainer.querySelector('a[onclick="loadPage(\'profile\')"]');
-                if (mobileProfileLink) {
-                    mobileProfileLink.insertAdjacentElement('afterend', mobileAdminLink);
-                }
+                mobileProfileLink.insertAdjacentElement('afterend', mobileAdminLink);
             }
         }
     } else {
@@ -213,8 +127,6 @@ function updateAuthUI() {
         });
     }
 }
-// --- FIX END: ADMIN LINK BUG ---
-
 
 // Load a page
 function loadPage(page) {
@@ -282,7 +194,7 @@ async function handleLogin(e) {
     const userType = document.getElementById('user-type').value;
     
     try {
-        const response = await fetch(`${API_URL}/login`, {
+        const response = await fetch(`${API_URL}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -326,7 +238,7 @@ async function handleSignup(e) {
     const userType = document.getElementById('signup-user-type').value;
     
     try {
-        const response = await fetch(`${API_URL}/signup`, {
+        const response = await fetch(`${API_URL}/api/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -364,177 +276,6 @@ function handleLogout() {
     alert('Logout successful!');
 }
 
-// Authentication Functions
-// function checkAuthStatus() {
-//     // Check if user is logged in
-//     if (!currentUser && !['index.html', 'signup.html'].includes(window.location.pathname.split('/').pop())) {
-//         // Redirect to login page if not on login or signup page
-//         window.location.href = 'index.html';
-//     }
-    
-//     // Update UI based on auth status
-//     const logoutLinks = document.querySelectorAll('a[href="index.html"]');
-//     logoutLinks.forEach(link => {
-//         if (link.textContent.trim() === 'Logout') {
-//             link.addEventListener('click', function(e) {
-//                 e.preventDefault();
-//                 logout();
-//             });
-//         }
-//     });
-// }
-
-// function initLoginPage() {
-//     const loginForm = document.getElementById('loginForm');
-//     if (loginForm) {
-//         loginForm.addEventListener('submit', function(e) {
-//             e.preventDefault();
-            
-//             const email = document.getElementById('email').value;
-//             const password = document.getElementById('password').value;
-//             const userType = document.getElementById('userType').value;
-            
-//             login(email, password, userType);
-//         });
-//     }
-// }
-
-// function initSignupPage() {
-//     const signupForm = document.getElementById('signupForm');
-//     if (signupForm) {
-//         signupForm.addEventListener('submit', function(e) {
-//             e.preventDefault();
-            
-//             const name = document.getElementById('name').value;
-//             const email = document.getElementById('email').value;
-//             const phone = document.getElementById('phone').value;
-//             const password = document.getElementById('password').value;
-//             const address = document.getElementById('address').value;
-//             const userType = document.getElementById('userType').value;
-            
-//             signup(name, email, phone, password, address, userType);
-//         });
-//     }
-// }
-
-// async function login(email, password, userType) {
-//     try {
-//         const response = await fetch(`${API_URL}/login`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ email, password, userType })
-//         });
-        
-//         const data = await response.json();
-        
-//         if (data.status === 'success') {
-//             // Save user data to localStorage
-//             localStorage.setItem('currentUser', JSON.stringify(data.user));
-//             currentUser = data.user;
-            
-//             // Redirect to menu page
-//             window.location.href = 'menu.html';
-//         } else {
-//             // Show error message
-//             alert(data.message || 'Login failed. Please try again.');
-//         }
-//     } catch (error) {
-//         console.error('Login error:', error);
-//         alert('An error occurred during login. Please try again.');
-//     }
-// }
-
-// async function signup(name, email, phone, password, address, userType) {
-//     try {
-//         const response = await fetch(`${API_URL}/signup`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ name, email, phone, password, address, userType })
-//         });
-        
-//         const data = await response.json();
-        
-//         if (data.status === 'success') {
-//             alert('Registration successful! Please login.');
-//             window.location.href = 'index.html';
-//         } else {
-//             // Show error message
-//             alert(data.message || 'Registration failed. Please try again.');
-//         }
-//     } catch (error) {
-//         console.error('Signup error:', error);
-//         alert('An error occurred during registration. Please try again.');
-//     }
-// }
-
-// function logout() {
-//     // Clear user data from localStorage
-//     localStorage.removeItem('currentUser');
-//     currentUser = null;
-    
-//     // Redirect to login page
-//     window.location.href = 'index.html';
-// }
-
-// Setup event listeners
-// function setupEventListeners() {
-//     // Filter buttons
-//     if (filterButtons) {
-//         filterButtons.forEach(button => {
-//             button.addEventListener('click', function() {
-//                 // Remove active class from all buttons
-//                 filterButtons.forEach(btn => btn.classList.remove('active'));
-                
-//                 // Add active class to clicked button
-//                 this.classList.add('active');
-                
-//                 // Get category and render menu items
-//                 const category = this.getAttribute('data-category');
-//                 renderMenuItems(category);
-//             });
-//         });
-//     }
-    
-//     // Mobile menu toggle
-//     if (mobileMenuToggle) {
-//         mobileMenuToggle.addEventListener('click', function() {
-//             navMenu.classList.toggle('active');
-//         });
-//     }
-// }
-
-// Menu Page Functions
-// function initMenuPage() {
-//     const menuGrid = document.getElementById('menu-grid');
-//     const filterButtons = document.querySelectorAll('.filter-btn');
-    
-//     if (menuGrid) {
-//         // Fetch menu items from API
-//         fetchMenuItems();
-        
-//         // Add event listeners to filter buttons
-//         if (filterButtons) {
-//             filterButtons.forEach(button => {
-//                 button.addEventListener('click', function() {
-//                     // Remove active class from all buttons
-//                     filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-//                     // Add active class to clicked button
-//                     this.classList.add('active');
-                    
-//                     // Get category and fetch menu items
-//                     const category = this.getAttribute('data-category');
-//                     fetchMenuItems(category);
-//                 });
-//             });
-//         }
-//     }
-// }
-
 // Fetch menu items
 async function fetchMenuItems(category = 'all') {
     const menuItemsContainer = document.getElementById('menu-items-container');
@@ -545,7 +286,7 @@ async function fetchMenuItems(category = 'all') {
         // Show loading state
         menuItemsContainer.innerHTML = '<div class="col-span-full text-center py-8">Loading menu items...</div>';
         
-        const response = await fetch(`${API_URL}/menu?category=${category}`);
+        const response = await fetch(`${API_URL}/api/menu?category=${category}`);
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -596,87 +337,6 @@ function filterMenu(category) {
     fetchMenuItems(category);
 }
 
-// Render menu items based on category
-// function renderMenuItems(category) {
-//     // Clear the menu grid
-//     if (!menuGrid) return;
-    
-//     menuGrid.innerHTML = '';
-    
-//     // Filter items by category
-//     const filteredItems = category === 'all' 
-//         ? menuItems 
-//         : menuItems.filter(item => item.category === category);
-    
-//     // Create and append menu items
-//     filteredItems.forEach(item => {
-//         const menuItem = createMenuItemElement(item);
-//         menuGrid.appendChild(menuItem);
-//     });
-    
-//     // If no items in category
-//     if (filteredItems.length === 0) {
-//         menuGrid.innerHTML = '<p class="no-items">No items found in this category.</p>';
-//     }
-// }
-
-// Create menu item element
-function createMenuItemElement(item) {
-    const menuItem = document.createElement('div');
-    menuItem.className = 'menu-item';
-    
-    menuItem.innerHTML = `
-        <img src="/static/images/menu/${item.image}" alt="${item.name}" class="menu-item-image">
-        <div class="menu-item-content">
-            <div class="menu-item-header">
-                <h3 class="menu-item-title">${item.name}</h3>
-                <span class="menu-item-price">₹${item.price}</span>
-            </div>
-            <span class="menu-item-category">${item.category}</span>
-            <p class="menu-item-description">${item.description}</p>
-            <button class="add-to-cart-btn" data-id="${item.id}">Add to Cart</button>
-        </div>
-    `;
-
-    
-    // Add event listener to the "Add to Cart" button
-    const addToCartBtn = menuItem.querySelector('.add-to-cart-btn');
-    addToCartBtn.addEventListener('click', function() {
-        addToCart(item);
-    });
-    
-    return menuItem;
-}
-
-// Add item to cart
-// function addItemToCart(item) {
-//     // Check if item already exists in cart
-//     const existingItem = cart.find(cartItem => cartItem.id === item.id);
-    
-//     if (existingItem) {
-//         // Increase quantity if item already in cart
-//         existingItem.quantity += 1;
-//     } else {
-//         // Add new item to cart
-//         cart.push({
-//             ...item,
-//             quantity: 1
-//         });
-//     }
-    
-//     // Save cart to localStorage
-//     localStorage.setItem('cart', JSON.stringify(cart));
-    
-//     // Update cart count
-//     updateCartCountDisplay();
-    
-//     // Show notification
-//     showNotification(`${item.name} added to cart!`);
-    
-//     // Log cart for demonstration (in a real app, you might save to localStorage)
-//     console.log('Cart:', cart);
-// }
-
 // Add item to cart
 async function addToCart(itemId) {
     if (!currentUser) {
@@ -686,7 +346,7 @@ async function addToCart(itemId) {
     }
     
     try {
-        const response = await fetch(`${API_URL}/cart`, {
+        const response = await fetch(`${API_URL}/api/cart`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -715,21 +375,6 @@ async function addToCart(itemId) {
     }
 }
 
-// Cart Page Functions
-// function initCartPage() {
-//     // Fetch cart items
-//     fetchCartItems();
-    
-//     // Add event listener to place order button
-//     const placeOrderBtn = document.getElementById('placeOrderBtn');
-//     if (placeOrderBtn) {
-//         placeOrderBtn.addEventListener('click', function() {
-//             // Redirect to checkout page
-//             window.location.href = 'checkout.html';
-//         });
-//     }
-// }
-
 // Fetch cart items
 async function fetchCartItems() {
     if (!currentUser) return;
@@ -741,7 +386,7 @@ async function fetchCartItems() {
     if (!cartItemsContainer) return;
     
     try {
-        const response = await fetch(`${API_URL}/cart/${currentUser.user_id}`);
+        const response = await fetch(`${API_URL}/api/cart/${currentUser.user_id}`);
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -772,13 +417,13 @@ async function fetchCartItems() {
                 cartItem.className = 'flex items-center py-4 border-b';
             
                 // Generate image path based on item name
-                const imageName = item.name.toLowerCase().replaceAll(' ', '_') + '.jpg';
+                const imageName = item.item_name.toLowerCase().replaceAll(' ', '_') + '.jpg';
                 const imgPath = `/static/images/menu/${imageName}`;
             
                 cartItem.innerHTML = `
-                    <img src="${imgPath}" onerror="this.src='/static/images/placeholder.jpg'" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg bg-gray-100">
+                    <img src="${imgPath}" onerror="this.src='/static/images/placeholder.jpg'" alt="${item.item_name}" class="w-16 h-16 object-cover rounded-lg bg-gray-100">
                     <div class="ml-4 flex-1">
-                        <h3 class="font-semibold">${item.name}</h3>
+                        <h3 class="font-semibold">${item.item_name}</h3>
                         <p class="text-red-600 font-bold">₹${item.price}</p>
                     </div>
                     <div class="flex items-center">
@@ -811,7 +456,7 @@ async function updateCartItem(itemId, quantity) {
     if (!currentUser) return;
     
     try {
-        const response = await fetch(`${API_URL}/cart/${currentUser.user_id}/update`, {
+        const response = await fetch(`${API_URL}/api/cart/${currentUser.user_id}/update`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -835,174 +480,6 @@ async function updateCartItem(itemId, quantity) {
         alert('An error occurred while updating cart. Please try again.');
     }
 }
-
-// async function fetchCartItems() {
-//     try {
-//         if (!currentUser) {
-//             alert('Please login to view your cart.');
-//             window.location.href = 'index.html';
-//             return;
-//         }
-        
-//         const cartItemsContainer = document.getElementById('cartItems');
-//         const emptyCartMessage = document.getElementById('emptyCartMessage');
-//         const cartSummary = document.querySelector('.cart-summary');
-//         const cartTotal = document.getElementById('cartTotal');
-        
-//         if (!cartItemsContainer) return;
-        
-//         // Show loading message
-//         cartItemsContainer.innerHTML = '<p>Loading cart items...</p>';
-        
-//         // Fetch cart items from API
-//         const response = await fetch(`${API_URL}/cart/${currentUser.id}`);
-//         const data = await response.json();
-        
-//         if (data.status === 'success') {
-//             // Save cart items
-//             cart = data.items;
-            
-//             // Check if cart is empty
-//             if (cart.length === 0) {
-//                 cartItemsContainer.style.display = 'none';
-//                 if (cartSummary) cartSummary.style.display = 'none';
-//                 if (emptyCartMessage) emptyCartMessage.style.display = 'block';
-//                 return;
-//             }
-            
-//             // Show cart items
-//             cartItemsContainer.style.display = 'block';
-//             if (cartSummary) cartSummary.style.display = 'flex';
-//             if (emptyCartMessage) emptyCartMessage.style.display = 'none';
-            
-//             // Clear cart items container
-//             cartItemsContainer.innerHTML = '';
-            
-//             // Render cart items
-//             cart.forEach(item => {
-//                 const cartItem = document.createElement('div');
-//                 cartItem.className = 'cart-item';
-//                 cartItem.innerHTML = `
-//                     <img src="${item.image || 'https://placeholder.svg?height=180&width=280'}" alt="${item.name}" class="cart-item-image">
-//                     <div class="cart-item-details">
-//                         <h3 class="cart-item-title">${item.name}</h3>
-//                         <p class="cart-item-price">₹${item.price} each</p>
-//                     </div>
-//                     <div class="cart-item-quantity">
-//                         <button class="quantity-btn decrease-btn" data-id="${item.item_id}">-</button>
-//                         <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.item_id}">
-//                         <button class="quantity-btn increase-btn" data-id="${item.item_id}">+</button>
-//                     </div>
-//                     <div class="cart-item-subtotal">₹${item.subtotal}</div>
-//                     <button class="cart-item-remove" data-id="${item.item_id}">&times;</button>
-//                 `;
-//                 cartItemsContainer.appendChild(cartItem);
-//             });
-            
-//             // Update cart total
-//             if (cartTotal) {
-//                 cartTotal.textContent = `₹${data.total}`;
-//             }
-            
-//             // Add event listeners to cart item buttons
-//             addCartItemEventListeners();
-//         } else {
-//             cartItemsContainer.innerHTML = '<p class="error">Failed to load cart items. Please try again.</p>';
-//         }
-//     } catch (error) {
-//         console.error('Fetch cart error:', error);
-//         const cartItemsContainer = document.getElementById('cartItems');
-//         if (cartItemsContainer) {
-//             cartItemsContainer.innerHTML = '<p class="error">An error occurred while loading cart items. Please try again.</p>';
-//         }
-//     }
-// }
-
-// function addCartItemEventListeners() {
-//     // Decrease quantity buttons
-//     document.querySelectorAll('.decrease-btn').forEach(button => {
-//         button.addEventListener('click', function() {
-//             const itemId = parseInt(this.getAttribute('data-id'));
-//             const quantityInput = this.parentElement.querySelector('.quantity-input');
-//             const currentQuantity = parseInt(quantityInput.value);
-            
-//             if (currentQuantity > 1) {
-//                 updateCartItemQuantity(itemId, currentQuantity - 1);
-//             }
-//         });
-//     });
-    
-//     // Increase quantity buttons
-//     document.querySelectorAll('.increase-btn').forEach(button => {
-//         button.addEventListener('click', function() {
-//             const itemId = parseInt(this.getAttribute('data-id'));
-//             const quantityInput = this.parentElement.querySelector('.quantity-input');
-//             const currentQuantity = parseInt(quantityInput.value);
-            
-//             updateCartItemQuantity(itemId, currentQuantity + 1);
-//         });
-//     });
-    
-//     // Quantity input fields
-//     document.querySelectorAll('.quantity-input').forEach(input => {
-//         input.addEventListener('change', function() {
-//             const itemId = parseInt(this.getAttribute('data-id'));
-//             const newQuantity = parseInt(this.value);
-            
-//             if (newQuantity >= 1) {
-//                 updateCartItemQuantity(itemId, newQuantity);
-//             } else {
-//                 this.value = 1;
-//                 updateCartItemQuantity(itemId, 1);
-//             }
-//         });
-//     });
-    
-//     // Remove buttons
-//     document.querySelectorAll('.cart-item-remove').forEach(button => {
-//         button.addEventListener('click', function() {
-//             const itemId = parseInt(this.getAttribute('data-id'));
-//             updateCartItemQuantity(itemId, 0); // 0 quantity will remove the item
-//         });
-//     });
-// }
-
-// async function updateCartItemQuantity(itemId, quantity) {
-//     try {
-//         if (!currentUser) {
-//             alert('Please login to update your cart.');
-//             window.location.href = 'index.html';
-//             return;
-//         }
-        
-//         // Update cart item in database
-//         const response = await fetch(`${API_URL}/cart/${currentUser.id}/update`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({
-//                 item_id: itemId,
-//                 quantity: quantity
-//             })
-//         });
-        
-//         const data = await response.json();
-        
-//         if (data.status === 'success') {
-//             // Refresh cart items
-//             fetchCartItems();
-            
-//             // Update cart count
-//             updateCartCount();
-//         } else {
-//             alert(data.message || 'Failed to update cart. Please try again.');
-//         }
-//     } catch (error) {
-//         console.error('Update cart error:', error);
-//         alert('An error occurred while updating cart. Please try again.');
-//     }
-// }
 
 // Update cart badge
 function updateCartBadge() {
@@ -1029,33 +506,9 @@ function updateCartSummary(total) {
     const cartTotal = document.getElementById('cart-total');
     
     if (cartSubtotal) cartSubtotal.textContent = `₹${parseFloat(total).toFixed(2)}`;
-if (cartTotal) cartTotal.textContent = `₹${(parseFloat(total) + 30).toFixed(2)}`;
+    if (cartTotal) cartTotal.textContent = `₹${(parseFloat(total) + 30).toFixed(2)}`;
  // Adding delivery fee
 }
-
-// Checkout Page Functions
-// function initCheckoutPage() {
-//     // Fetch cart items for order summary
-//     fetchOrderSummary();
-    
-//     // Add event listener to checkout form
-//     const checkoutForm = document.getElementById('checkoutForm');
-//     if (checkoutForm) {
-//         checkoutForm.addEventListener('submit', function(e) {
-//             e.preventDefault();
-            
-//             const deliveryAddress = document.getElementById('deliveryAddress').value;
-//             const paymentMethod = document.getElementById('paymentMethod').value;
-            
-//             if (!deliveryAddress || !paymentMethod) {
-//                 alert('Please fill in all fields.');
-//                 return;
-//             }
-            
-//             placeOrder(deliveryAddress, paymentMethod);
-//         });
-//     }
-// }
 
 // Render checkout page
 function renderCheckout() {
@@ -1115,7 +568,7 @@ async function placeOrder() {
         }));
 
         
-        const response = await fetch(`${API_URL}/orders`, {
+        const response = await fetch(`${API_URL}/api/orders`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1149,7 +602,7 @@ async function placeOrder() {
                 const orderItem = document.createElement('div');
                 orderItem.className = 'flex justify-between mb-2';
                 orderItem.innerHTML = `
-                    <span>${item.name} x ${item.quantity}</span>
+                    <span>${item.item_name} x ${item.quantity}</span>
                     <span>₹${item.subtotal}</span>
                 `;
                 orderSummary.appendChild(orderItem);
@@ -1178,133 +631,12 @@ async function placeOrder() {
     }
 }
 
-// async function fetchOrderSummary() {
-//     try {
-//         if (!currentUser) {
-//             alert('Please login to checkout.');
-//             window.location.href = 'index.html';
-//             return;
-//         }
-        
-//         const orderItemsContainer = document.getElementById('orderItems');
-//         const orderTotal = document.getElementById('orderTotal');
-        
-//         if (!orderItemsContainer || !orderTotal) return;
-        
-//         // Show loading message
-//         orderItemsContainer.innerHTML = '<p>Loading order summary...</p>';
-        
-//         // Fetch cart items from API
-//         const response = await fetch(`${API_URL}/cart/${currentUser.id}`);
-//         const data = await response.json();
-        
-//         if (data.status === 'success') {
-//             // Check if cart is empty
-//             if (data.items.length === 0) {
-//                 alert('Your cart is empty. Please add items to your cart before checkout.');
-//                 window.location.href = 'menu.html';
-//                 return;
-//             }
-            
-//             // Clear order items container
-//             orderItemsContainer.innerHTML = '';
-            
-//             // Render order items
-//             data.items.forEach(item => {
-//                 const orderItem = document.createElement('div');
-//                 orderItem.className = 'order-item';
-//                 orderItem.innerHTML = `
-//                     <div class="order-item-details">
-//                         <span class="order-item-title">${item.name}</span>
-//                         <span class="order-item-quantity">Qty: ${item.quantity}</span>
-//                     </div>
-//                     <span class="order-item-price">₹${item.subtotal}</span>
-//                 `;
-//                 orderItemsContainer.appendChild(orderItem);
-//             });
-            
-//             // Update order total
-//             orderTotal.textContent = `₹${data.total}`;
-//         } else {
-//             orderItemsContainer.innerHTML = '<p class="error">Failed to load order summary. Please try again.</p>';
-//         }
-//     } catch (error) {
-//         console.error('Fetch order summary error:', error);
-//         const orderItemsContainer = document.getElementById('orderItems');
-//         if (orderItemsContainer) {
-//             orderItemsContainer.innerHTML = '<p class="error">An error occurred while loading order summary. Please try again.</p>';
-//         }
-//     }
-// }
-
-// async function placeOrder(deliveryAddress, paymentMethod) {
-//     try {
-//         if (!currentUser) {
-//             alert('Please login to place an order.');
-//             window.location.href = 'index.html';
-//             return;
-//         }
-        
-//         // Place order in database
-//         const response = await fetch(`${API_URL}/orders`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({
-//                 user_id: currentUser.id,
-//                 deliveryAddress,
-//                 paymentMethod
-//             })
-//         });
-        
-//         const data = await response.json();
-        
-//         if (data.status === 'success') {
-//             // Save order ID for confirmation page
-//             localStorage.setItem('lastOrderId', data.order_id);
-            
-//             // Redirect to confirmation page
-//             window.location.href = 'confirmation.html';
-//         } else {
-//             alert(data.message || 'Failed to place order. Please try again.');
-//         }
-//     } catch (error) {
-//         console.error('Place order error:', error);
-//         alert('An error occurred while placing order. Please try again.');
-//     }
-// }
-
-// Confirmation Page Functions
-// function initConfirmationPage() {
-//     const orderId = document.getElementById('orderId');
-//     const deliveryStatus = document.getElementById('deliveryStatus');
-//     const paymentStatus = document.getElementById('paymentStatus');
-    
-//     if (orderId) {
-//         // Get order ID from localStorage
-//         const lastOrderId = localStorage.getItem('lastOrderId') || 'ORD-12345';
-//         orderId.textContent = lastOrderId;
-//     }
-    
-//     if (deliveryStatus) {
-//         deliveryStatus.textContent = 'Processing';
-//     }
-    
-//     if (paymentStatus) {
-//         paymentStatus.textContent = 'Completed';
-//     }
-    
-//     // Clear cart count
-//     updateCartCount();
-// }
-
 // Fetch user profile
 async function fetchUserProfile() {
     if (!currentUser) return;
     
     try {
-        const response = await fetch(`${API_URL}/user/${currentUser.user_id}`);
+        const response = await fetch(`${API_URL}/api/user/${currentUser.user_id}`);
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -1334,7 +666,7 @@ async function fetchUserOrders() {
         // Show loading state
         orderHistoryContainer.innerHTML = '<div class="text-center py-8">Loading order history...</div>';
         
-        const response = await fetch(`${API_URL}/orders/${currentUser.user_id}`);
+        const response = await fetch(`${API_URL}/api/orders/${currentUser.user_id}`);
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -1431,7 +763,7 @@ async function fetchAdminMenuItems() {
         // Show loading state
         adminMenuItems.innerHTML = '<tr><td colspan="4" class="text-center py-4">Loading menu items...</td></tr>';
         
-        const response = await fetch(`${API_URL}/menu`);
+        const response = await fetch(`${API_URL}/api/menu`);
         const data = await response.json();
         
         if (data.status === 'success') {
@@ -1448,7 +780,7 @@ async function fetchAdminMenuItems() {
                 row.innerHTML = `
                     <td class="py-3 px-4">
                         <div class="flex items-center">
-                            <img src="${item.image || `https://source.unsplash.com/random/300x200/?${item.item_name.replace(' ', '-')}`}" alt="${item.item_name}" class="w-10 h-10 object-cover rounded-lg mr-3">
+                            <img src="${item.image || `https://source.unsplash.com/random/300x200/?${item.item_name.replace(' ', '-')}`}" onerror="this.src='/static/images/menu/placeholder.jpg'" alt="${item.item_name}" class="w-10 h-10 object-cover rounded-lg mr-3">
                             <div>
                                 <div class="font-semibold">${item.item_name}</div>
                                 <div class="text-xs text-gray-500">${item.category}</div>
@@ -1458,6 +790,9 @@ async function fetchAdminMenuItems() {
                     <td class="py-3 px-4">${item.category}</td>
                     <td class="py-3 px-4">₹${item.price}</td>
                     <td class="py-3 px-4">
+                        <button onclick="showEditModal(${item.item_id})" class="text-blue-600 hover:text-blue-800 mr-4">
+                            <i class="fas fa-edit"></i>
+                        </button>
                         <button onclick="deleteMenuItem(${item.item_id})" class="text-red-600 hover:text-red-800">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -1495,7 +830,7 @@ async function handleAddMenuItem(e) {
     }
     
     try {
-        const response = await fetch(`${API_URL}/admin/menu`, {
+        const response = await fetch(`${API_URL}/api/admin/menu`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1544,7 +879,7 @@ async function deleteMenuItem(itemId) {
     }
     
     try {
-        const response = await fetch(`${API_URL}/admin/menu/${itemId}`, {
+        const response = await fetch(`${API_URL}/api/admin/menu/${itemId}`, {
             method: 'DELETE'
         });
         
@@ -1564,73 +899,64 @@ async function deleteMenuItem(itemId) {
     }
 }
 
-// Update cart count
-// function updateCartCountDisplay() {
-//     const cartCount = document.querySelector('.cart-count');
-//     if (!cartCount) return;
-    
-//     const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-//     cartCount.textContent = totalItems;
-// }
+async function showEditModal(itemId) {
+    try {
+        const response = await fetch(`${API_URL}/api/admin/menu/${itemId}`);
+        const data = await response.json();
 
-// Utility Functions
-// function updateCartCount() {
-//     if (!currentUser) return;
-    
-//     // Fetch cart count from API
-//     fetch(`${API_URL}/cart/${currentUser.id}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.status === 'success') {
-//                 // Update cart count in UI
-//                 const cartCountElements = document.querySelectorAll('.cart-count');
-//                 const totalItems = data.items.reduce((total, item) => total + item.quantity, 0);
-                
-//                 cartCountElements.forEach(element => {
-//                     element.textContent = totalItems;
-//                 });
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Update cart count error:', error);
-//         });
-// }
-
-// Show notification
-function showNotification(message) {
-    if (!notification) return;
-    
-    // Set notification message
-    const notificationText = notification.querySelector('p');
-    if (notificationText) {
-        notificationText.textContent = message;
+        if (data.status === 'success') {
+            const item = data.item;
+            document.getElementById('edit-item-id').value = item.item_id;
+            document.getElementById('edit-item-name').value = item.item_name;
+            document.getElementById('edit-item-description').value = item.description;
+            document.getElementById('edit-item-category').value = item.category;
+            document.getElementById('edit-item-price').value = item.price;
+            document.getElementById('edit-item-image').value = item.image;
+            
+            document.getElementById('edit-item-modal').classList.remove('hidden');
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('Fetch item for edit error:', error);
+        alert('Could not fetch item details.');
     }
+}
+
+function hideEditModal() {
+    document.getElementById('edit-item-modal').classList.add('hidden');
+}
+
+async function handleUpdateMenuItem(e) {
+    e.preventDefault();
     
-    // Show notification
-    notification.classList.add('show');
-    
-    // Hide notification after 3 seconds
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
+    const itemId = document.getElementById('edit-item-id').value;
+    const itemData = {
+        name: document.getElementById('edit-item-name').value,
+        description: document.getElementById('edit-item-description').value,
+        category: document.getElementById('edit-item-category').value,
+        price: document.getElementById('edit-item-price').value,
+        image: document.getElementById('edit-item-image').value
+    };
+
+    try {
+        const response = await fetch(`${API_URL}/api/admin/menu/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(itemData)
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            alert('Item updated successfully!');
+            hideEditModal();
+            fetchAdminMenuItems(); // Refresh the list
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('Update item error:', error);
+        alert('An error occurred while updating the item.');
+    }
 }
-
-// Calculate cart total
-function calculateTotal() {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-}
-
-// Generate random order ID
-function generateOrderId() {
-    return 'ORD-' + Math.floor(10000 + Math.random() * 90000);
-}
-
-// Replace placeholder images with actual food images (if available)
-function loadImages() {
-    // In a real application, you would replace placeholder URLs with actual image URLs
-    // This is just a placeholder function
-}
-
-// If we're using hardcoded menu items for testing (fallback)
-const menuItems = menuItemsData;
-
