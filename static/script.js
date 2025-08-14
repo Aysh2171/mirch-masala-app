@@ -1,5 +1,5 @@
 // Global variables
-const API_URL = 'http://13.127.182.153:5000';
+const API_URL = 'http://13.234.202.97:5000';
 let cart = [];
 let currentUser = null;
 let currentPage = 'home';
